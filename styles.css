@@ -1,0 +1,633 @@
+/* Nail Design — site styles. Recreated from Figma. */
+
+:root {
+  --ink: rgb(112, 84, 66);        /* main soft brown */
+  --ink-dark: rgb(70, 50, 38);
+  --cream: rgb(255, 239, 243);
+  --pink-pale: rgb(255, 217, 226);
+  --yellow-pale: rgb(249, 254, 212);
+  --green-pale: rgb(207, 230, 186);
+  --orange-warm: rgb(255, 208, 143);
+  --green-leaf: rgb(132, 160, 105);
+  --serif: "Hina Mincho", "Cormorant Garamond", "Times New Roman", serif;
+  --sans: "Poppins", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--sans);
+  color: var(--ink);
+  background: #fff8f4;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+button { font-family: inherit; cursor: pointer; }
+
+/* shared display title */
+.display-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+
+/* film grain overlay (subtle radial texture, no SVG filter so it bundles cleanly) */
+.home-grain, .topic-grain {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(rgba(0,0,0,0.04) 1px, transparent 1px) 0 0 / 3px 3px,
+    radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px) 1px 1px / 3px 3px;
+  mix-blend-mode: multiply;
+  opacity: 0.6;
+  z-index: 2;
+}
+
+/* ============================================================
+   HOME PAGE
+   ============================================================ */
+.page-home {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  /* fallback gradient if bg image off */
+  background:
+    radial-gradient(ellipse at 80% 80%, #f4c7b3 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 30%, #f6efe6 0%, transparent 60%),
+    #f8e6df;
+}
+.home-bg {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: saturate(1.05) brightness(1.02);
+  z-index: 0;
+}
+
+.home-layout {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: clamp(24px, 4vw, 64px);
+  padding: clamp(40px, 5vh, 80px) clamp(40px, 5vw, 84px);
+  min-height: 100vh;
+  align-items: center;
+}
+
+.home-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.home-text .display-title {
+  color: var(--green-leaf);
+  line-height: 0.88;
+  text-wrap: balance;
+}
+
+.home-subtitle {
+  font-size: clamp(15px, 1.6vw, 26px);
+  color: var(--ink);
+  text-align: left;
+  margin: clamp(8px, 1vh, 16px) 0 clamp(28px, 4vh, 56px) 0;
+  letter-spacing: 0.01em;
+}
+
+.home-body {
+  font-size: clamp(18px, 1.7vw, 30px);
+  color: var(--ink);
+  line-height: 1.18;
+  max-width: 38ch;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* hand area — hand sits low/right and lets the wrist exit the viewport */
+.home-hand {
+  position: relative;
+  height: clamp(560px, 90vh, 980px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: visible;
+}
+
+.hand-plate {
+  position: absolute;
+  inset: 4% 14% 14% 4%;
+  border-radius: 96px;
+  background: var(--orange-warm);
+  z-index: 0;
+}
+
+.sparkle {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  filter: drop-shadow(0 4px 12px rgba(255, 220, 160, 0.55));
+}
+
+.hand-wrap {
+  position: relative;
+  height: 116%;          /* taller than container so wrist crops off bottom */
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  transform: translate(6%, 6%);
+}
+
+.hand-img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 30px 40px rgba(80, 40, 30, 0.18));
+}
+
+.hotspots {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Hotspots sized in % of the rendered hand container.
+   We need them positioned in % of the IMG, not the parent.
+   The img height fills the wrap, width = aspect (1024/1536) of height.
+   So the hotspots layer must overlay only the image area. */
+.hand-wrap .hotspots {
+  /* match the aspect-ratio box of the image */
+  width: auto;
+  aspect-ratio: 1024 / 1536;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nail-hit {
+  position: absolute;
+  pointer-events: auto;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  border-radius: 60% / 50%;
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.nail-hit:hover, .nail-hit:focus-visible {
+  background: rgba(255, 255, 255, 0.35);
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.25), 0 12px 28px rgba(40, 20, 10, 0.18);
+  transform: scale(1.04);
+}
+
+.hand-hint {
+  position: absolute;
+  bottom: 4%;
+  right: 14%;
+  font-size: 15px;
+  color: var(--ink);
+  font-style: normal;
+  text-align: right;
+  line-height: 1.2;
+  margin: 0;
+  z-index: 4;
+}
+
+/* ============================================================
+   TOPIC PAGES
+   ============================================================ */
+.page-topic {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: clamp(40px, 5vh, 72px) clamp(32px, 5vw, 72px) clamp(180px, 24vh, 280px);
+  background: #fdf5ee;
+}
+
+.topic-bg {
+  position: absolute; inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  filter: saturate(1.05);
+}
+
+.topic-title, .topic-body, .topic-quotes { position: relative; z-index: 3; }
+
+/* home button */
+.home-btn {
+  position: absolute;
+  top: clamp(28px, 5vh, 54px);
+  right: clamp(28px, 5vw, 54px);
+  width: 86px; height: 86px;
+  border-radius: 999px;
+  border: 0;
+  display: grid; place-items: center;
+  box-shadow: 0 8px 22px rgba(80, 40, 30, 0.14);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 6;
+}
+.home-btn img { width: 42px; height: 42px; opacity: 0.85; }
+.home-btn:hover { transform: scale(1.06) rotate(-3deg); box-shadow: 0 12px 32px rgba(80,40,30,0.22); }
+
+/* topic title */
+.topic-title {
+  max-width: min(1100px, 90vw);
+  color: #fff;
+  line-height: 0.85;
+  margin: clamp(24px, 6vh, 80px) 0 0 clamp(0px, 1vw, 24px);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  text-shadow: 0 4px 30px rgba(120, 60, 40, 0.12);
+}
+
+.topic-title span { display: block; }
+
+/* body — stacked, left-aligned */
+.topic-body {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 4vh, 56px);
+  margin: clamp(28px, 4vh, 60px) 0 clamp(40px, 6vh, 80px);
+  max-width: 1280px;
+}
+.body-para {
+  font-size: clamp(17px, 1.6vw, 26px);
+  line-height: 1.32;
+  color: var(--ink);
+  margin: 0;
+  text-align: left;
+  text-wrap: pretty;
+}
+.body-wide   { max-width: 62ch; }
+.body-narrow { max-width: 42ch; }
+
+/* Quotes section */
+.topic-quotes {
+  margin: clamp(60px, 10vh, 140px) 0 0;
+  max-width: 1280px;
+}
+.quotes-h {
+  color: #fff;
+  margin-bottom: clamp(40px, 6vh, 80px);
+}
+.quote {
+  font-size: clamp(17px, 1.4vw, 24px);
+  line-height: 1.28;
+  color: rgb(158, 72, 15);
+  max-width: 60ch;
+  margin: 0 0 clamp(28px, 4vh, 56px);
+  font-style: normal;
+  font-weight: 500;
+  text-align: left;
+}
+
+/* tilted hand floating on the right of topic pages */
+.topic-hand {
+  position: absolute;
+  bottom: 4%;
+  right: -14%;          /* arm still continues off the right edge, but all nails visible */
+  width: 760px;
+  height: 980px;
+  pointer-events: none;
+  z-index: 4;
+}
+.topic-hand-rotate {
+  position: relative;
+  width: 100%; height: 100%;
+  transform: rotate(-40deg);
+  transform-origin: 50% 50%;
+  pointer-events: auto;
+}
+.topic-hand .hand-img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 30px 50px rgba(80, 30, 30, 0.18));
+}
+.topic-hand .hotspots {
+  aspect-ratio: 1024 / 1536;
+  width: auto;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.topic-hint {
+  position: absolute;
+  top: 42%;
+  left: 14%;
+  transform: none;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.2;
+  text-align: left;
+  margin: 0;
+}
+
+/* footer nav removed */
+
+/* ============================================================
+   Frame 2 — Artists page (5 stacked sections)
+   ============================================================ */
+.page-frame2 {
+  position: relative;
+  overflow: hidden;
+  background: #fdf5ee;
+}
+
+.home-btn-fixed {
+  position: fixed;
+  top: clamp(28px, 5vh, 54px);
+  right: clamp(28px, 5vw, 54px);
+  z-index: 50;
+}
+
+.section-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: saturate(1.05);
+  z-index: 0;
+}
+
+.stripes {
+  position: absolute; inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.stripes span {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateX(-50%);
+}
+
+/* ---- shared artist hero ---- */
+.artist-hero {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: clamp(40px, 6vh, 80px) clamp(32px, 5vw, 84px);
+  display: flex;
+  align-items: center;
+}
+.artist-hero-inner {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.artist-name {
+  line-height: 0.85;
+  letter-spacing: -0.005em;
+  text-shadow: 0 6px 30px rgba(120, 60, 40, 0.10);
+  margin: 0;
+}
+
+.artist-credit {
+  text-align: right;
+  color: var(--ink);
+  font-size: clamp(18px, 1.5vw, 26px);
+  margin: clamp(8px, 1vh, 16px) 0 clamp(40px, 5vh, 64px);
+  letter-spacing: 0.02em;
+}
+
+.ying-title-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.ying-title-row .artist-name { line-height: 0.8; }
+.ying-credit { margin: 0 0 18px; }
+
+/* Ying: title layered to the right, overlapping the portrait card */
+.ying-layout {
+  position: relative;
+}
+.ying-card-row {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(360px, 520px) 1fr;
+  gap: clamp(40px, 6vw, 96px);
+  align-items: center;
+  padding-top: clamp(80px, 12vh, 180px); /* leave headroom so title doesn't crash */
+}
+.ying-bio {
+  padding-top: clamp(60px, 8vh, 120px); /* push bio below the title so they don't collide */
+}
+.ying-title-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 4;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;   /* children left-aligned within the container */
+  pointer-events: none;
+  text-align: left;
+  width: auto;               /* size to the title's width */
+}
+.ying-name {
+  line-height: 0.85;
+  margin: 0;
+  text-align: left;
+  transform: none;
+}
+.ying-credit {
+  margin: clamp(6px, 1vh, 14px) 0 0 0;
+  padding-left: 48px;
+  text-align: left;
+}
+
+.artist-card-row {
+  display: grid;
+  grid-template-columns: minmax(360px, 520px) 1fr;
+  gap: clamp(40px, 6vw, 96px);
+  align-items: flex-end;
+}
+
+.portrait-card {
+  border-radius: 83px;
+  padding: clamp(36px, 4vw, 60px);
+  box-shadow: 0 30px 60px rgba(80, 30, 30, 0.18);
+  aspect-ratio: 520 / 604;
+  width: 100%;
+}
+.portrait-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 44px;
+  background-size: cover;
+  background-position: center;
+}
+
+.artist-bio {
+  padding-bottom: clamp(20px, 4vh, 60px);
+}
+.artist-bio-text {
+  font-size: clamp(20px, 1.8vw, 30px);
+  line-height: 1.22;
+  color: var(--ink);
+  margin: 0 0 clamp(28px, 4vh, 44px);
+  max-width: 22ch;
+  text-wrap: pretty;
+}
+
+.socials { display: flex; gap: 16px; }
+.social-pill {
+  width: 66px; height: 66px;
+  border-radius: 999px;
+  display: grid; place-items: center;
+  transition: transform 0.2s, background 0.2s;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(80,30,30,0.10);
+}
+.social-pill img { width: 30px; height: 30px; object-fit: contain; }
+.social-pill:hover { transform: translateY(-2px) scale(1.05); }
+
+/* ---- designs section ---- */
+.designs-section {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  padding: clamp(40px, 6vh, 80px) clamp(32px, 5vw, 72px) clamp(60px, 8vh, 120px);
+  display: flex;
+  align-items: center;
+}
+.designs-inner {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1340px;
+  margin: 0 auto;
+}
+.designs-title {
+  line-height: 0.85;
+  margin: 0 0 clamp(40px, 6vh, 72px);
+  text-shadow: 0 6px 30px rgba(120, 60, 40, 0.10);
+}
+
+.designs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(20px, 2.5vw, 38px);
+}
+.design-card {
+  position: relative;
+  aspect-ratio: 269 / 477;
+}
+.design-plate {
+  position: absolute;
+  inset: 26px 0 0 0;
+  border-radius: 76px;
+}
+.design-img {
+  position: absolute;
+  inset: 0 0 26px 32px;
+  border-radius: 76px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 30px 50px rgba(80, 30, 30, 0.18);
+}
+.designs-credit {
+  text-align: center;
+  font-size: clamp(20px, 1.8vw, 32px);
+  margin: clamp(40px, 6vh, 72px) 0 0;
+  letter-spacing: 0.02em;
+}
+
+/* ---- hand CTA bottom ---- */
+.hand-cta {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hand-cta-inner {
+  position: relative;
+  z-index: 3;
+  width: min(900px, 90vw);
+  height: min(900px, 80vh);
+}
+.hand-cta-inner .hand-plate {
+  position: absolute;
+  inset: 4% 14% 14% 4%;
+  border-radius: 96px;
+  background: var(--orange-warm);
+  z-index: 0;
+}
+.hand-wrap-cta {
+  position: absolute;
+  inset: 0;
+  height: 116%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  transform: translate(6%, 6%);
+  z-index: 2;
+}
+.hand-wrap-cta .hand-img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+.hand-wrap-cta .hotspots {
+  aspect-ratio: 1024 / 1536;
+  width: auto;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.hand-hint-cta {
+  position: absolute;
+  bottom: 6%;
+  right: 14%;
+  z-index: 4;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 980px) {
+  .home-layout {
+    grid-template-columns: 1fr;
+    padding: 32px 24px 60px;
+  }
+  .home-text .display-title { font-size: clamp(56px, 18vw, 140px) !important; }
+  .home-subtitle { text-align: left; }
+  .home-body { font-size: 18px; max-width: none; }
+  .home-hand { height: 60vh; }
+  .topic-title { font-size: clamp(64px, 16vw, 140px) !important; }
+  .topic-hand { display: none; }
+  .artist-card-row { grid-template-columns: 1fr; align-items: stretch; }
+  .ying-card-row { grid-template-columns: 1fr; padding-top: 40px; }
+  .ying-title-overlay { position: relative; width: 100%; text-align: left; align-items: flex-start; }
+  .ying-name { text-align: left; transform: none; }
+  .ying-bio { padding-top: 0; }
+  .ying-credit { margin: 8px 0 24px; text-align: left; }
+  .designs-grid { grid-template-columns: repeat(2, 1fr); }
+  .artist-name { font-size: clamp(72px, 22vw, 180px) !important; }
+  .designs-title { font-size: clamp(56px, 18vw, 140px) !important; }
+  .ying-title-row { flex-direction: column; align-items: flex-start; }
+  .artist-credit { text-align: left; }
+}
