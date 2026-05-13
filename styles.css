@@ -1,4 +1,4 @@
-/* Nail Design — site styles. Recreated from Figma. */
+/* Nail Design â€” site styles. Recreated from Figma. */
 
 :root {
   --ink: rgb(112, 84, 66);        /* main soft brown */
@@ -108,7 +108,7 @@ button { font-family: inherit; cursor: pointer; }
   text-wrap: pretty;
 }
 
-/* hand area — hand sits low/right and lets the wrist exit the viewport */
+/* hand area â€” hand sits low/right and lets the wrist exit the viewport */
 .home-hand {
   position: relative;
   height: clamp(560px, 90vh, 980px);
@@ -253,7 +253,7 @@ button { font-family: inherit; cursor: pointer; }
 
 .topic-title span { display: block; }
 
-/* body — stacked, left-aligned */
+/* body â€” stacked, left-aligned */
 .topic-body {
   display: flex;
   flex-direction: column;
@@ -336,7 +336,7 @@ button { font-family: inherit; cursor: pointer; }
 /* footer nav removed */
 
 /* ============================================================
-   Frame 2 — Artists page (5 stacked sections)
+   Frame 2 â€” Artists page (5 stacked sections)
    ============================================================ */
 .page-frame2 {
   position: relative;
@@ -426,10 +426,12 @@ button { font-family: inherit; cursor: pointer; }
   grid-template-columns: minmax(360px, 520px) 1fr;
   gap: clamp(40px, 6vw, 96px);
   align-items: center;
-  padding-top: clamp(80px, 12vh, 180px); /* leave headroom so title doesn't crash */
+  /* leave space for the absolutely-positioned title above (matches title's vw size) */
+  padding-top: clamp(140px, 20vw, 300px);
 }
 .ying-bio {
-  padding-top: clamp(60px, 8vh, 120px); /* push bio below the title so they don't collide */
+  /* push bio below the title; matches the title's clamp(120px, 24vw, 360px) height */
+  padding-top: clamp(120px, 20vw, 280px);
 }
 .ying-title-overlay {
   position: absolute;
